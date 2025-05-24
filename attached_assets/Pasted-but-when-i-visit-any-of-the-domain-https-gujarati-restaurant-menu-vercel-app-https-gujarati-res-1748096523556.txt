@@ -1,0 +1,133 @@
+but when i visit any of the domain
+https://gujarati-restaurant-menu.vercel.app/
+https://gujarati-restaurant-menu-git-main-valtris-projects.vercel.app/
+
+It shows code not UI or anything
+// server/index.ts
+import express2 from "express";
+
+// server/routes.ts
+import { createServer } from "http";
+
+// server/storage.ts
+var MemStorage = class {
+  categories;
+  menuItems;
+  categoryIdCounter;
+  menuItemIdCounter;
+  constructor() {
+    this.categories = /* @__PURE__ */ new Map();
+    this.menuItems = /* @__PURE__ */ new Map();
+    this.categoryIdCounter = 1;
+    this.menuItemIdCounter = 1;
+    this.initializeDefaultData();
+  }
+  initializeDefaultData() {
+    const defaultCategories = [
+      { name: "thali", displayName: "Gujarati Thali", icon: "fas fa-utensils", color: "green", order: 1, mealType: "lunch" },
+      { name: "sabji", displayName: "Sabji", icon: "fas fa-leaf", color: "green", order: 2, mealType: "lunch" },
+      { name: "farsan", displayName: "Farsan", icon: "fas fa-cookie-bite", color: "orange", order: 3, mealType: "lunch" },
+      { name: "sweet", displayName: "Sweet", icon: "fas fa-candy-cane", color: "pink", order: 4, mealType: "lunch" },
+      { name: "roti", displayName: "Roti & Rice", icon: "fas fa-bread-slice", color: "brown", order: 5, mealType: "lunch" },
+      { name: "dinner", displayName: "Dinner Items", icon: "fas fa-moon", color: "purple", order: 1, mealType: "dinner" }
+    ];
+    defaultCategories.forEach((cat) => {
+      const category = {
+        id: this.categoryIdCounter++,
+        name: cat.name,
+        displayName: cat.displayName,
+        icon: cat.icon,
+        color: cat.color,
+        order: cat.order || 0,
+        mealType: cat.mealType || "lunch"
+      };
+      this.categories.set(category.id, category);
+    });
+    const defaultMenuItems = [
+      // Thali (Complete meal)
+      { name: "Unlimited Gujarati Thali", description: "Complete traditional thali with unlimited servings", price: 2e4, categoryId: 1, isAvailable: true, order: 1, mealType: "lunch" },
+      // Sabji items (part of thali)
+      { name: "Aloo Gobi", description: "Fresh & Spicy", categoryId: 2, isAvailable: true, order: 1, mealType: "lunch" },
+      { name: "Dal Tadka", description: "Rich & Creamy", categoryId: 2, isAvailable: true, order: 2, mealType: "lunch" },
+      { name: "Mix Veg", description: "Garden Fresh", categoryId: 2, isAvailable: true, order: 3, mealType: "lunch" },
+      { name: "Bhindi Masala", description: "Crispy & Flavorful", categoryId: 2, isAvailable: true, order: 4, mealType: "lunch" },
+      // Farsan items (part of thali)
+      { name: "Dhokla", description: "Steamed & Soft", categoryId: 3, isAvailable: true, order: 1, mealType: "lunch" },
+      { name: "Khandvi", description: "Rolled Delight", categoryId: 3, isAvailable: true, order: 2, mealType: "lunch" },
+      { name: "Thepla", description: "Spiced Flatbread", categoryId: 3, isAvailable: true, order: 3, mealType: "lunch" },
+      // Sweet items (part of thali)
+      { name: "Gulab Jamun", description: "Sweet & Juicy", categoryId: 4, isAvailable: true, order: 1, mealType: "lunch" },
+      { name: "Mohanthal", description: "Rich & Nutty", categoryId: 4, isAvailable: true, order: 2, mealType: "lunch" },
+      { name: "Jalebi", description: "Crispy & Sweet", categoryId: 4, isAvailable: true, order: 3, mealType: "lunch" },
+      // Roti & Rice (part of thali)
+      { name: "Gujarati Roti", description: "Fresh & Soft", categoryId: 5, isAvailable: true, order: 1, mealType: "lunch" },
+      { name: "Jeera Rice", description: "Aromatic", categoryId: 5, isAvailable: true, order: 2, mealType: "lunch" },
+      // Dinner items (sold separately)
+      { name: "Chole Bhature", description: "Spicy chickpeas with fried bread", price: 12e3, categoryId: 6, isAvailable: true, order: 1, mealType: "dinner" },
+      { name: "Pav Bhaji", description: "Mumbai street food special", price: 1e4, categoryId: 6, isAvailable: true, order: 2, mealType: "dinner" }
+    ];
+    defaultMenuItems.forEach((item) => {
+      const menuItem = {
+        id: this.menuItemIdCounter++,
+        name: item.name,
+        description: item.description || null,
+        price: item.price || null,
+        categoryId: item.categoryId,
+        isAvailable: item.isAvailable || true,
+        imageUrl: item.imageUrl || null,
+        order: item.order || 0,
+        isSpecial: item.isSpecial || false,
+        mealType: item.mealType || "lunch",
+        createdAt: /* @__PURE__ */ new Date()
+      };
+      this.menuItems.set(menuItem.id, menuItem);
+    });
+  }
+  // Categories
+  async getCategories() {
+    return Array.from(this.categories.values()).sort((a, b) => a.order - b.order);
+  }
+  async getCategoryById(id) {
+    return this.categories.get(id);
+  }
+  async createCategory(category) {
+    const newCategory = {
+      id: this.categoryIdCounter++,
+      name: category.name,
+      displayName: category.displayName,
+      icon: category.icon,
+      color: category.color,
+      order: category.order || 0,
+      mealType: category.mealType || "lunch"
+    };
+    this.categories.set(newCategory.id, newCategory);
+    return newCategory;
+  }
+  async updateCategory(id, updates) {
+    const category = this.categories.get(id);
+    if (!category) return void 0;
+    const updatedCategory = { ...category, ...updates };
+    this.categories.set(id, updatedCategory);
+    return updatedCategory;
+  }
+  async deleteCategory(id) {
+    return this.categories.delete(id);
+  }
+  // Menu Items
+  async getMenuItems() {
+    return Array.from(this.menuItems.values()).sort((a, b) => a.order - b.order);
+  }
+  async getMenuItemById(id) {
+    return this.menuItems.get(id);
+  }
+  async getMenuItemsByCategory(categoryId) {
+    return Array.from(this.menuItems.values()).filter((item) => item.categoryId === categoryId).sort((a, b) => a.order - b.order);
+  }
+  async createMenuItem(item) {
+    const newItem = {
+      id: this.menuItemIdCounter++,
+      name: item.name,
+      description: item.description || null,
+      price: item.price || null,
+      categoryId: item.categoryId,
+      isAvailable: item.isAvailable || true,
