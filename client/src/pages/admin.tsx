@@ -5,14 +5,96 @@ import { QRCodeGenerator } from "@/components/qr-code-generator";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
-import { Crown, Plus, Edit, BarChart3, QrCode } from "lucide-react";
+import { Crown, Plus, Edit, BarChart3, QrCode, LogIn } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Link } from "wouter";
 
 export default function AdminPage() {
   const { data: categories, isLoading } = useMenu();
   const { data: analytics } = useAnalytics();
   const [isQRDialogOpen, setIsQRDialogOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const { toast } = useToast();
+
+  const ADMIN_PASSWORD = "admin123"; // Simple password for demo
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+      toast({
+        title: "Welcome!",
+        description: "Successfully logged into admin dashboard",
+      });
+    } else {
+      toast({
+        title: "Access Denied",
+        description: "Incorrect password. Please try again.",
+        variant: "destructive",
+      });
+      setPassword("");
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-warm-cream flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full max-w-md px-6"
+        >
+          <Card className="shadow-2xl">
+            <CardContent className="p-8">
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-saffron rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Crown className="text-white w-8 h-8" />
+                </div>
+                <h1 className="text-2xl font-bold text-dark-brown">Admin Access</h1>
+                <p className="text-gray-600 mt-2">Enter password to manage menu</p>
+              </div>
+              
+              <form onSubmit={handleLogin} className="space-y-6">
+                <div>
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter admin password"
+                    className="mt-1"
+                    required
+                  />
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  className="w-full bg-saffron hover:bg-saffron/90"
+                  size="lg"
+                >
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Login to Dashboard
+                </Button>
+              </form>
+              
+              <div className="text-center mt-6">
+                <Link href="/" className="text-saffron hover:underline text-sm">
+                  ← Back to Menu
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

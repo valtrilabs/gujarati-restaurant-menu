@@ -1,11 +1,16 @@
 import { motion } from "framer-motion";
 import { useMenu } from "@/hooks/use-menu";
 import { CategorySection } from "@/components/category-section";
-import { QRCodeGenerator } from "@/components/qr-code-generator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export default function MenuPage() {
   const { data: categories, isLoading, error } = useMenu();
+  const [activeTab, setActiveTab] = useState<"lunch" | "dinner">("lunch");
+
+  const lunchCategories = categories?.filter(cat => cat.mealType === "lunch") || [];
+  const dinnerCategories = categories?.filter(cat => cat.mealType === "dinner") || [];
 
   if (error) {
     return (
@@ -42,7 +47,7 @@ export default function MenuPage() {
               Gujarat Thali Express
             </h1>
             <p className="text-lg opacity-90 mb-4">Authentic Gujarati Cuisine</p>
-            <div className="inline-flex items-center bg-white/20 rounded-full px-4 py-2 backdrop-blur-sm">
+            <div className="inline-flex items-center bg-white/20 rounded-full px-4 py-2 backdrop-blur-sm mb-4">
               <i className="fas fa-clock mr-2 text-golden"></i>
               <span className="text-sm">
                 Fresh Menu - {new Date().toLocaleDateString('en-IN', {
@@ -52,32 +57,83 @@ export default function MenuPage() {
                 })}
               </span>
             </div>
+            <div className="text-center">
+              <Button 
+                variant="outline"
+                size="sm"
+                className="bg-white/20 border-white/30 text-white hover:bg-white/30"
+                onClick={() => window.location.href = '/admin'}
+              >
+                🔧 Admin Access
+              </Button>
+            </div>
           </motion.div>
         </div>
       </div>
 
-      {/* QR Code Section */}
+      {/* Meal Type Tabs */}
       <div className="max-w-md mx-auto px-6 py-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
+          className="bg-white rounded-2xl shadow-lg p-2 mb-6"
         >
-          <QRCodeGenerator />
+          <div className="flex space-x-2">
+            <Button
+              variant={activeTab === "lunch" ? "default" : "ghost"}
+              className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
+                activeTab === "lunch" 
+                  ? "bg-saffron text-white hover:bg-saffron/90" 
+                  : "text-saffron hover:bg-saffron/10"
+              }`}
+              onClick={() => setActiveTab("lunch")}
+            >
+              🍽️ Gujarati Thali (Lunch)
+            </Button>
+            <Button
+              variant={activeTab === "dinner" ? "default" : "ghost"}
+              className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
+                activeTab === "dinner" 
+                  ? "bg-saffron text-white hover:bg-saffron/90" 
+                  : "text-saffron hover:bg-saffron/10"
+              }`}
+              onClick={() => setActiveTab("dinner")}
+            >
+              🌙 Dinner Items
+            </Button>
+          </div>
         </motion.div>
       </div>
 
-      {/* Today's Thali Section */}
+      {/* Menu Content */}
       <div className="max-w-md mx-auto px-6 mb-8">
-        <motion.div 
-          className="text-center mb-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-        >
-          <h2 className="text-2xl font-bold text-dark-brown mb-2">आज का थाली</h2>
-          <p className="text-gray-600">Today's Special Thali</p>
-        </motion.div>
+        {activeTab === "lunch" && (
+          <motion.div 
+            className="text-center mb-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+          >
+            <h2 className="text-2xl font-bold text-dark-brown mb-2">આજનું થાળી</h2>
+            <p className="text-gray-600">Today's Special Thali - ₹200 (Unlimited)</p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mt-3">
+              <p className="text-sm text-green-700 font-medium">🍽️ Complete unlimited meal with all items below</p>
+            </div>
+          </motion.div>
+        )}
+
+        {activeTab === "dinner" && (
+          <motion.div 
+            className="text-center mb-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+          >
+            <h2 className="text-2xl font-bold text-dark-brown mb-2">સાંજનું ખાવાનું</h2>
+            <p className="text-gray-600">Evening Dinner Items</p>
+          </motion.div>
+        )}
 
         {isLoading ? (
           <div className="space-y-6">
@@ -94,7 +150,7 @@ export default function MenuPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {categories?.map((category, index) => (
+            {(activeTab === "lunch" ? lunchCategories : dinnerCategories).map((category, index) => (
               <CategorySection 
                 key={category.id} 
                 category={category} 

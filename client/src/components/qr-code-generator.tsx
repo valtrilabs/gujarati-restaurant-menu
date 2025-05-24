@@ -10,7 +10,7 @@ interface QRCodeGeneratorProps {
 export function QRCodeGenerator({ menuUrl }: QRCodeGeneratorProps) {
   const { toast } = useToast();
   
-  const currentUrl = menuUrl || window.location.origin;
+  const currentUrl = menuUrl || `${window.location.origin}/menu`;
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(currentUrl)}`;
 
   const handleDownload = async () => {
