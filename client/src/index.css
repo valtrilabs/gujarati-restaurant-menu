@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 45 33% 98%; /* #FFF8F0 - warm cream */
+  --foreground: 28 25% 9%; /* #2C1810 - dark brown */
+  --muted: 40 20% 96%; /* #F5F0E8 */
+  --muted-foreground: 28 15% 45%; /* #6B5B4F */
+  --popover: 0 0% 100%;
+  --popover-foreground: 28 25% 9%;
+  --card: 0 0% 100%;
+  --card-foreground: 28 25% 9%;
+  --border: 40 15% 88%; /* #E0D5C7 */
+  --input: 40 15% 88%;
+  --primary: 15 86% 59%; /* #FF6B35 - saffron */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 40 20% 96%;
+  --secondary-foreground: 28 25% 9%;
+  --accent: 51 100% 50%; /* #FFD700 - golden */
+  --accent-foreground: 28 25% 9%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 15 86% 59%;
+  --radius: 0.5rem;
+  
+  /* Custom colors */
+  --saffron: 15 86% 59%; /* #FF6B35 */
+  --warm-brown: 25 64% 28%; /* #8B4513 */
+  --golden: 51 100% 50%; /* #FFD700 */
+  --warm-cream: 45 33% 98%; /* #FFF8F0 */
+  --dark-brown: 28 25% 9%; /* #2C1810 */
+}
+
+.dark {
+  --background: 28 25% 9%;
+  --foreground: 45 33% 98%;
+  --muted: 28 20% 15%;
+  --muted-foreground: 40 15% 65%;
+  --popover: 28 25% 9%;
+  --popover-foreground: 45 33% 98%;
+  --card: 28 25% 9%;
+  --card-foreground: 45 33% 98%;
+  --border: 28 20% 15%;
+  --input: 28 20% 15%;
+  --primary: 15 86% 59%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 28 20% 15%;
+  --secondary-foreground: 45 33% 98%;
+  --accent: 51 100% 50%;
+  --accent-foreground: 28 25% 9%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 15 86% 59%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .font-devanagari {
+    font-family: 'Noto Sans Devanagari', 'Poppins', sans-serif;
+  }
+}
+
+@layer utilities {
+  .bg-warm-cream {
+    background-color: hsl(var(--warm-cream));
+  }
+  
+  .text-dark-brown {
+    color: hsl(var(--dark-brown));
+  }
+  
+  .bg-saffron {
+    background-color: hsl(var(--saffron));
+  }
+  
+  .text-saffron {
+    color: hsl(var(--saffron));
+  }
+  
+  .bg-golden {
+    background-color: hsl(var(--golden));
+  }
+  
+  .text-golden {
+    color: hsl(var(--golden));
+  }
+  
+  .border-golden {
+    border-color: hsl(var(--golden));
+  }
+  
+  .bg-warm-brown {
+    background-color: hsl(var(--warm-brown));
+  }
+  
+  .text-warm-brown {
+    color: hsl(var(--warm-brown));
+  }
+}
+
+/* Animation keyframes */
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-10px); 
+  }
+}
+
+@keyframes fadeInUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0; 
+    transform: translateX(-30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { 
+    opacity: 1; 
+  }
+  50% { 
+    opacity: 0.8; 
+  }
+}
+
+/* Custom animation classes */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s infinite;
+}
+
+/* Interactive effects */
+.category-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+}
+
+.menu-item {
+  transition: all 0.3s ease;
+}
+
+.menu-item:hover {
+  background: linear-gradient(135deg, hsl(var(--warm-cream)) 0%, #FFE4B5 100%);
+  transform: translateX(4px);
+}
+
+.glass-effect {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Font Awesome icons fallback */
+.fas, .fa {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom focus styles */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid hsl(var(--saffron));
+  outline-offset: 2px;
+}
