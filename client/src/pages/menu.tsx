@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useMenu } from "@/hooks/use-menu";
 import { CategorySection } from "@/components/category-section";
+import { QRCodeGenerator } from "@/components/qr-code-generator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -57,18 +58,20 @@ export default function MenuPage() {
                 })}
               </span>
             </div>
-            <div className="text-center">
-              <Button 
-                variant="outline"
-                size="sm"
-                className="bg-white/20 border-white/30 text-white hover:bg-white/30"
-                onClick={() => window.location.href = '/admin'}
-              >
-                🔧 Admin Access
-              </Button>
-            </div>
+
           </motion.div>
         </div>
+      </div>
+
+      {/* QR Code Section */}
+      <div className="max-w-md mx-auto px-6 py-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+        >
+          <QRCodeGenerator />
+        </motion.div>
       </div>
 
       {/* Meal Type Tabs */}
@@ -76,7 +79,7 @@ export default function MenuPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
           className="bg-white rounded-2xl shadow-lg p-2 mb-6"
         >
           <div className="flex space-x-2">
@@ -100,7 +103,7 @@ export default function MenuPage() {
               }`}
               onClick={() => setActiveTab("dinner")}
             >
-              🌙 Dinner Items
+              🌙 Dinner
             </Button>
           </div>
         </motion.div>
