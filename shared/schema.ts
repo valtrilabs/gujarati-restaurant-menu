@@ -9,6 +9,7 @@ export const categories = pgTable("categories", {
   icon: text("icon").notNull(),
   color: text("color").notNull(),
   order: integer("order").notNull().default(0),
+  mealType: text("meal_type").notNull().default("lunch"), // "lunch" or "dinner"
 });
 
 export const menuItems = pgTable("menu_items", {
@@ -21,6 +22,7 @@ export const menuItems = pgTable("menu_items", {
   imageUrl: text("image_url"),
   order: integer("order").notNull().default(0),
   isSpecial: boolean("is_special").notNull().default(false),
+  mealType: text("meal_type").notNull().default("lunch"), // "lunch" or "dinner"
   createdAt: timestamp("created_at").defaultNow(),
 });
 

@@ -37,52 +37,71 @@ export class MemStorage implements IStorage {
   }
 
   private initializeDefaultData() {
-    // Create default categories
+    // Create default categories for lunch (Thali components)
     const defaultCategories: InsertCategory[] = [
-      { name: "sabji", displayName: "Sabji", icon: "fas fa-leaf", color: "green", order: 1 },
-      { name: "farsan", displayName: "Farsan", icon: "fas fa-cookie-bite", color: "orange", order: 2 },
-      { name: "sweet", displayName: "Sweet", icon: "fas fa-candy-cane", color: "pink", order: 3 },
-      { name: "evening", displayName: "Evening Specials", icon: "fas fa-moon", color: "purple", order: 4 },
-      { name: "beverages", displayName: "Beverages", icon: "fas fa-glass-whiskey", color: "blue", order: 5 },
+      { name: "thali", displayName: "Gujarati Thali", icon: "fas fa-utensils", color: "green", order: 1, mealType: "lunch" },
+      { name: "sabji", displayName: "Sabji", icon: "fas fa-leaf", color: "green", order: 2, mealType: "lunch" },
+      { name: "farsan", displayName: "Farsan", icon: "fas fa-cookie-bite", color: "orange", order: 3, mealType: "lunch" },
+      { name: "sweet", displayName: "Sweet", icon: "fas fa-candy-cane", color: "pink", order: 4, mealType: "lunch" },
+      { name: "roti", displayName: "Roti & Rice", icon: "fas fa-bread-slice", color: "brown", order: 5, mealType: "lunch" },
+      { name: "dinner", displayName: "Dinner Items", icon: "fas fa-moon", color: "purple", order: 1, mealType: "dinner" },
     ];
 
     defaultCategories.forEach(cat => {
-      const category: Category = { ...cat, id: this.categoryIdCounter++ };
+      const category: Category = { 
+        id: this.categoryIdCounter++,
+        name: cat.name,
+        displayName: cat.displayName,
+        icon: cat.icon,
+        color: cat.color,
+        order: cat.order || 0,
+        mealType: cat.mealType || "lunch"
+      };
       this.categories.set(category.id, category);
     });
 
     // Create default menu items
     const defaultMenuItems: InsertMenuItem[] = [
-      // Sabji items
-      { name: "Aloo Gobi", description: "Fresh & Spicy", categoryId: 1, isAvailable: true, order: 1 },
-      { name: "Dal Tadka", description: "Rich & Creamy", categoryId: 1, isAvailable: true, order: 2 },
-      { name: "Mix Veg", description: "Garden Fresh", categoryId: 1, isAvailable: true, order: 3 },
-      { name: "Bhindi Masala", description: "Crispy & Flavorful", categoryId: 1, isAvailable: true, order: 4 },
+      // Thali (Complete meal)
+      { name: "Unlimited Gujarati Thali", description: "Complete traditional thali with unlimited servings", price: 20000, categoryId: 1, isAvailable: true, order: 1, mealType: "lunch" },
       
-      // Farsan items
-      { name: "Dhokla", description: "Steamed & Soft", categoryId: 2, isAvailable: true, order: 1 },
-      { name: "Khandvi", description: "Rolled Delight", categoryId: 2, isAvailable: true, order: 2 },
-      { name: "Thepla", description: "Spiced Flatbread", categoryId: 2, isAvailable: true, order: 3 },
+      // Sabji items (part of thali)
+      { name: "Aloo Gobi", description: "Fresh & Spicy", categoryId: 2, isAvailable: true, order: 1, mealType: "lunch" },
+      { name: "Dal Tadka", description: "Rich & Creamy", categoryId: 2, isAvailable: true, order: 2, mealType: "lunch" },
+      { name: "Mix Veg", description: "Garden Fresh", categoryId: 2, isAvailable: true, order: 3, mealType: "lunch" },
+      { name: "Bhindi Masala", description: "Crispy & Flavorful", categoryId: 2, isAvailable: true, order: 4, mealType: "lunch" },
       
-      // Sweet items
-      { name: "Gulab Jamun", description: "Sweet & Juicy", categoryId: 3, isAvailable: true, order: 1 },
-      { name: "Mohanthal", description: "Rich & Nutty", categoryId: 3, isAvailable: true, order: 2 },
-      { name: "Jalebi", description: "Crispy & Sweet", categoryId: 3, isAvailable: true, order: 3 },
+      // Farsan items (part of thali)
+      { name: "Dhokla", description: "Steamed & Soft", categoryId: 3, isAvailable: true, order: 1, mealType: "lunch" },
+      { name: "Khandvi", description: "Rolled Delight", categoryId: 3, isAvailable: true, order: 2, mealType: "lunch" },
+      { name: "Thepla", description: "Spiced Flatbread", categoryId: 3, isAvailable: true, order: 3, mealType: "lunch" },
       
-      // Evening items
-      { name: "Chole Bhature", description: "", price: 12000, categoryId: 4, isAvailable: true, order: 1 },
-      { name: "Pav Bhaji", description: "", price: 10000, categoryId: 4, isAvailable: true, order: 2 },
+      // Sweet items (part of thali)
+      { name: "Gulab Jamun", description: "Sweet & Juicy", categoryId: 4, isAvailable: true, order: 1, mealType: "lunch" },
+      { name: "Mohanthal", description: "Rich & Nutty", categoryId: 4, isAvailable: true, order: 2, mealType: "lunch" },
+      { name: "Jalebi", description: "Crispy & Sweet", categoryId: 4, isAvailable: true, order: 3, mealType: "lunch" },
       
-      // Beverages
-      { name: "Cold Drinks", description: "", price: 3000, categoryId: 5, isAvailable: true, order: 1 },
-      { name: "Lassi", description: "", price: 4000, categoryId: 5, isAvailable: true, order: 2 },
-      { name: "Buttermilk", description: "Fresh & Cool", price: 2500, categoryId: 5, isAvailable: true, order: 3 },
+      // Roti & Rice (part of thali)
+      { name: "Gujarati Roti", description: "Fresh & Soft", categoryId: 5, isAvailable: true, order: 1, mealType: "lunch" },
+      { name: "Jeera Rice", description: "Aromatic", categoryId: 5, isAvailable: true, order: 2, mealType: "lunch" },
+      
+      // Dinner items (sold separately)
+      { name: "Chole Bhature", description: "Spicy chickpeas with fried bread", price: 12000, categoryId: 6, isAvailable: true, order: 1, mealType: "dinner" },
+      { name: "Pav Bhaji", description: "Mumbai street food special", price: 10000, categoryId: 6, isAvailable: true, order: 2, mealType: "dinner" },
     ];
 
     defaultMenuItems.forEach(item => {
       const menuItem: MenuItem = { 
-        ...item, 
         id: this.menuItemIdCounter++,
+        name: item.name,
+        description: item.description || null,
+        price: item.price || null,
+        categoryId: item.categoryId,
+        isAvailable: item.isAvailable || true,
+        imageUrl: item.imageUrl || null,
+        order: item.order || 0,
+        isSpecial: item.isSpecial || false,
+        mealType: item.mealType || "lunch",
         createdAt: new Date()
       };
       this.menuItems.set(menuItem.id, menuItem);
@@ -99,7 +118,15 @@ export class MemStorage implements IStorage {
   }
 
   async createCategory(category: InsertCategory): Promise<Category> {
-    const newCategory: Category = { ...category, id: this.categoryIdCounter++ };
+    const newCategory: Category = { 
+      id: this.categoryIdCounter++,
+      name: category.name,
+      displayName: category.displayName,
+      icon: category.icon,
+      color: category.color,
+      order: category.order || 0,
+      mealType: category.mealType || "lunch"
+    };
     this.categories.set(newCategory.id, newCategory);
     return newCategory;
   }
@@ -134,8 +161,16 @@ export class MemStorage implements IStorage {
 
   async createMenuItem(item: InsertMenuItem): Promise<MenuItem> {
     const newItem: MenuItem = { 
-      ...item, 
       id: this.menuItemIdCounter++,
+      name: item.name,
+      description: item.description || null,
+      price: item.price || null,
+      categoryId: item.categoryId,
+      isAvailable: item.isAvailable || true,
+      imageUrl: item.imageUrl || null,
+      order: item.order || 0,
+      isSpecial: item.isSpecial || false,
+      mealType: item.mealType || "lunch",
       createdAt: new Date()
     };
     this.menuItems.set(newItem.id, newItem);
